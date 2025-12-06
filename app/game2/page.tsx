@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import GameLayout from "@/components/GameLayout";
@@ -35,7 +35,10 @@ export default function Game2() {
   const t = getTranslation(language);
 
   const gridSize = difficulty === "easy" ? 4 : difficulty === "medium" ? 5 : 6;
-  const symbols: Symbol[] = ["●", "○", "■", "□", "▲", "△", "★", "☆"];
+  const symbols: Symbol[] = useMemo(
+    () => ["●", "○", "■", "□", "▲", "△", "★", "☆"],
+    []
+  );
 
   const generateGrid = useCallback((): GridCell[] => {
     const cells: GridCell[] = [];
