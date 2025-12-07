@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -59,6 +60,50 @@ export default function Home() {
     },
   ];
 
+  const [bannerLang, setBannerLang] = useState<"ua" | "en">("ua");
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const bannerCopy = {
+    ua: {
+      heading: "Дисклеймер марафону",
+      intro: [
+        "Марафон з вайбкодінгу: 10 проєктів, по одному на день, максимум 5 годин.",
+        "Легка навчальна штука, щоб перезавантажитися після великих задач.",
+        "Проєкти сирі, невідшліфовані й можуть лагати (а що ви хотіли від проєкту, створеного за 3–4 години 🙂).",
+      ],
+      goalsLabel: "МЕТА",
+      bullets: [
+        "Пофанити й покреативити, пробрейнстормити ідеї.",
+        "Відпрацювати вайбкодинг і швидкий перехід від ідеї до MVP.",
+        "Подивитися, як AI-підхід впливає на темп і якість.",
+        "Зрозуміти сильні/слабкі сторони підходу. Потенційні продуктові вигоди.",
+        "Напрацьовувати нове мислення в реалізації проектів.",
+        "Вчасно відриватися від коду й приборкувати перфекціонізм — робити швидко й без залипань.",
+      ],
+      collapse: { expanded: "Згорнути", collapsed: "Розгорнути" },
+    },
+    en: {
+      heading: "Marathon disclaimer",
+      intro: [
+        "Vibe-coding marathon: 10 projects, one per day, max 5 hours.",
+        "A light learning build to reset after bigger work.",
+        "Projects are raw, unpolished, and may lag (what else to expect from a 3–4 hour build 🙂).",
+      ],
+      goalsLabel: "GOALS",
+      bullets: [
+        "Have fun, get creative, brainstorm ideas.",
+        "Practice vibe-coding and jumping from idea to live MVP fast.",
+        "See how the AI-assisted approach affects speed and quality.",
+        "Understand approach strengths/weak spots. Potential product wins.",
+        "Build a new mindset for shipping projects.",
+        "Step away on time and tame perfectionism — ship fast, skip endless polish.",
+      ],
+      collapse: { expanded: "Collapse", collapsed: "Expand" },
+    },
+  } as const;
+
+  const current = bannerCopy[bannerLang];
+
   return (
     <div className="min-h-screen relative">
       {/* Background Image */}
@@ -71,6 +116,78 @@ export default function Home() {
       {/* Content */}
       <div className="relative z-10 p-4">
       <div className="max-w-6xl mx-auto">
+        {/* Marathon Disclaimer Banner */}
+        <div
+          className="mb-6 border rounded-xl shadow-sm text-black"
+          style={{
+            background: "#fff3b0",
+            borderColor: "#e5b700",
+            fontFamily: "Arial, sans-serif",
+          }}
+        >
+          <div className="flex flex-col gap-2 p-4 sm:p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="text-lg sm:text-xl font-bold">{current.heading}</div>
+              <div className="flex items-center gap-2">
+                <div className="flex rounded-lg overflow-hidden border border-yellow-600">
+                  <button
+                    onClick={() => setBannerLang("ua")}
+                    className={`px-2 py-1 text-sm font-semibold ${
+                      bannerLang === "ua" ? "bg-yellow-200" : "bg-transparent"
+                    }`}
+                    aria-label="Switch to Ukrainian"
+                  >
+                    UA
+                  </button>
+                  <button
+                    onClick={() => setBannerLang("en")}
+                    className={`px-2 py-1 text-sm font-semibold ${
+                      bannerLang === "en" ? "bg-yellow-200" : "bg-transparent"
+                    }`}
+                    aria-label="Switch to English"
+                  >
+                    EN
+                  </button>
+                </div>
+                <button
+                  onClick={() => setIsCollapsed((v) => !v)}
+                  className="flex items-center gap-1 text-sm font-semibold underline underline-offset-4"
+                >
+                  <span>{isCollapsed ? "▸" : "▾"}</span>
+                  <span>
+                    {isCollapsed
+                      ? current.collapse.collapsed
+                      : current.collapse.expanded}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {!isCollapsed && (
+              <div className="flex flex-col gap-3">
+                <div className="space-y-1 text-sm sm:text-base leading-relaxed">
+                  {current.intro.map((line) => (
+                    <div key={line}>{line}</div>
+                  ))}
+                </div>
+                <div className="space-y-2">
+                  <div className="text-xs font-bold tracking-wide uppercase text-yellow-900">
+                    {current.goalsLabel}
+                  </div>
+                  <ul className="space-y-2 text-sm sm:text-base">
+                    {current.bullets.map((item) => (
+                      <li key={item} className="flex items-start gap-2 leading-snug">
+                        <span className="mt-[2px]">✔️</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Header */}
         <motion.div
           className="text-center mb-12 pt-8"
